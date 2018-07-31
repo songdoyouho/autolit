@@ -23,10 +23,10 @@ except :
 box_x = right_x - left_x
 box_y = right_y - left_y
 
-def display_img(y):
+def display_img(x):
     img = ImageGrab.grab(bbox = (left_x, left_y, right_x, right_y))
     img_np = np.array(img)
-    img_np[y, :, :] = 255
+    img_np[:, x, :] = 255
     frame = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.imshow("screen box", frame)
     cv2.waitKey(0)
@@ -57,8 +57,13 @@ def display_img(y):
 #display_img(384) # 愛心 左標 384/415=0.9253
 #display_img(400) # 愛心 右標 400/415=0.96385
 
+#display_img(685) # 愛心 上標 685/718=0.95403
+#display_img(700) # 愛心 下標 700/718=0.97493
+#display_img(343) # send 左標 343/415=0.8265
+#display_img(359) # send 右標 359/4150.86506
 #pyautogui.moveTo(left_x + int((box_x*0.02409+box_x*0.14457)/2) , left_y + int((box_y*0.27715+box_y*0.13788)/2) ) # 限時動態頭像
 #pyautogui.moveTo(left_x + int((box_x*0.03614+box_x*0.13253)/2) , left_y + int((box_y*0.61699+box_y*0.67409)/2) ) # 主頁加好友頭像
 #pyautogui.moveTo(left_x + int((box_x*0.03614+box_x*0.12048)/2) , left_y + int((box_y*0.10445+box_y*0.1532)/2) ) # 下一個好友頭像
 #pyautogui.moveTo(left_x + int((box_x*0.9253+box_x*0.96385)/2) , left_y + int((box_y*0.95403+box_y*0.97493)/2) ) # 愛心
+#pyautogui.moveTo(left_x + int((box_x*0.8265+box_x*0.86506)/2) , left_y + int((box_y*0.95403+box_y*0.97493)/2) ) # send
 #pyautogui.moveTo(left_x + int(box_x/2) , left_y + int((box_y*0.93732+box_y)/2) ) # 加為好友 bar

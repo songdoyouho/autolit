@@ -5,7 +5,7 @@ import win32gui
 import pyautogui
 import time
 
-
+pyautogui.FAILSAFE = True
 hwnd = win32gui.FindWindow(None, '夜神模擬器')
 # 254,55,155 pink BGR
    
@@ -87,103 +87,142 @@ def check_end_or_not(flaggg):
 def click_first_video():    
     pyautogui.moveTo(left_x + int((box_x*0.02409+box_x*0.14457)/2) , left_y + int((box_y*0.27715+box_y*0.13788)/2) )
     pyautogui.click()
-    time.sleep(2)
+    time.sleep(1)
     like = None
     like = check_liked_or_not(like)
     if like == True:
         click_next_video()
-        time.sleep(2)
+        time.sleep(1)
     else:
         click_like_button()
-        time.sleep(1)
+        time.sleep(0.5)
         click_next_video()
-        time.sleep(2)
+        time.sleep(1)
 
 def add_friends_init():
     pyautogui.moveTo(left_x + int((box_x*0.03614+box_x*0.13253)/2) , left_y + int((box_y*0.61699+box_y*0.67409)/2) )
     pyautogui.click()
-    time.sleep(2)
+    time.sleep(1)
     #display_img(545, 44)
     pyautogui.moveTo(left_x + int(box_x/2) , left_y + int((box_y*0.93732+box_y)/2) )
     pyautogui.click()
 
 def add_friends():
-    for num in range(9):
+    for _ in range(9):
         pyautogui.moveTo(left_x + int(box_x/2), left_y + int(box_y/2)) # middle
         pyautogui.click()
-        time.sleep(2)
+        time.sleep(1)
         pyautogui.moveTo(right_x - 15, left_y + int(box_y/2)) # slide to next person
         pyautogui.dragRel(-300,0,1)
-        time.sleep(2)
+        time.sleep(1)
         pyautogui.moveTo(left_x + int((box_x*0.03614+box_x*0.12048)/2) , left_y + int((box_y*0.10445+box_y*0.1532)/2) )
         pyautogui.click()
-        time.sleep(2)
+        time.sleep(1)
         pyautogui.moveTo(left_x + int(box_x/2) , left_y + int((box_y*0.93732+box_y)/2) )
         pyautogui.click()
         time.sleep(0.5)
      
     pyautogui.moveTo(left_x + int(box_x*0.95041), left_y + int(box_y*0.11418)) # 645, 230 460/484=0.95041 95/832=0.11418
-    time.sleep(1)
+    time.sleep(0.5)
     pyautogui.click()
-    time.sleep(1)
+    time.sleep(0.5)
     pyautogui.click()
 
-def check_error_next(): # 暫時還沒寫好 如果網路太慢，會黑幕導致程式中斷
+def check_dead_or_not():
+    #tstart = time.time()
     img = ImageGrab.grab(bbox = (left_x, left_y, right_x, right_y))
     img_np = np.array(img)
-    tmp = img_np[793:793+25,209:209+67,:] # 把有字的地方框出來
-    frame = cv2.cvtColor(tmp, cv2.COLOR_BGR2RGB)
-    #v2.imshow("screen box", frame)
-    #cv2.waitKey(0)
-    #cv2.imwrite("black.jpg", frame)
-    cv2.imwrite("black1.jpg", frame)
-        
-    black = cv2.imread("black.jpg")
-    black1 = cv2.imread("black1.jpg")
-    # compare pixel
+    #frame = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
+    #cv2.imshow("screen box", frame)
+    # count 0
     count = 0
-    for i in range(67):
-        for j in range(25):
-            pixel1 = black[j, i, 1]
-            pixel2 = black1[j, i, 1]
-            if pixel1 == pixel2:
-                continue
-            else:
+    img_size = img_np.shape
+    for i in range(img_size[0]):
+        for j in range(img_size[1]):
+            if img_np[i, j, 0] == 0 and img_np[i, j, 1] == 0 and img_np[i, j, 2] == 0:
                 count += 1
-        
-    if count == 0:
-        pyautogui.moveTo(left_x + 242 + 200, left_y + 416) # slide to next person
-        pyautogui.dragRel(-int(box_x/3*2), 0, 1)
+    #tend= time.time()
+    #print(tend - tstart, count, img_size[0]*img_size[1])
+
+    if count > img_size[0]*img_size[1]/4*3:
+        click_next_video()
         time.sleep(2)
+    else:
+        pass
+
+def send_some_words():
+    pyautogui.moveTo((left_x + right_x)/2 , left_y + int((box_y*0.95403+box_y*0.97493)/2) ) # 愛心
+    pyautogui.click()
+    pyautogui.typewrite('liked! please like my posts! Thanks!!!')
+    pyautogui.moveTo(left_x + int((box_x*0.8265+box_x*0.86506)/2) , left_y + int((box_y*0.95403+box_y*0.97493)/2) ) # send
+    pyautogui.click()
 
 
+# main
 print("輸入1, 加10個好友")
-print("輸入2, 自動按讚, 但是網路要夠快")
-print("輸入3, 離開")
+print("輸入2, 自動按讚")
+print("輸入3, 1 + 2")
+print("輸入4, 離開")
 main_flag = True
 while main_flag:
     input_order = input("please enter order:")
-    if input_order == str(1):
+    if input_order == str(1): # add friends
         add_friends_init()
         add_friends()
-    elif input_order == str(2):
+
+    elif input_order == str(2): # like the posts and send message
         click_first_video()
         flag = True
+        post_counter = 0
         while flag:
             like = None
             like = check_liked_or_not(like)
             if like == True:
                 click_next_video()
-                time.sleep(2)
-                #check_error_next()
+                time.sleep(1)
+                check_dead_or_not()
                 flag = check_end_or_not(flag)
             else:
                 click_like_button()
-                time.sleep(1)
+                time.sleep(0.5)
                 click_next_video()
-                time.sleep(2)
-                #check_error_next()
+                time.sleep(1)
+                check_dead_or_not()
                 flag = check_end_or_not(flag)
-    elif input_order == str(3):
+
+            post_counter += 1
+            if post_counter == 15:
+                send_some_words()
+                post_counter = 0
+
+    elif input_order == str(3): # add friends and like the posts
+        add_friends_init()
+        add_friends()
+        time.sleep(2)
+        click_first_video()
+        flag = True
+        post_counter = 0
+        while flag:
+            like = None
+            like = check_liked_or_not(like)
+            if like == True:
+                click_next_video()
+                time.sleep(1)
+                check_dead_or_not()
+                flag = check_end_or_not(flag)
+            else:
+                click_like_button()
+                time.sleep(0.5)
+                click_next_video()
+                time.sleep(1)
+                check_dead_or_not()
+                flag = check_end_or_not(flag)
+
+            post_counter += 1
+            if post_counter == 15:
+                send_some_words()
+                post_counter = 0
+
+    elif input_order == str(4):
         main_flag = False
         print("Thank you! 888")
