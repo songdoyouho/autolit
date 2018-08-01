@@ -162,7 +162,8 @@ def send_some_words():
 print("輸入1, 加10個好友")
 print("輸入2, 自動按讚")
 print("輸入3, 1 + 2")
-print("輸入4, 離開")
+print("輸入4, 1 + 2 但是沒有傳訊息")
+print("輸入5, exit")
 main_flag = True
 while main_flag:
     input_order = input("please enter order:")
@@ -174,6 +175,7 @@ while main_flag:
         click_first_video()
         flag = True
         post_counter = 0
+        send_counter = 0
         while flag:
             like = None
             like = check_liked_or_not(like)
@@ -193,7 +195,11 @@ while main_flag:
             post_counter += 1
             if post_counter == 15:
                 send_some_words()
+                send_counter += 1
                 post_counter = 0
+            
+            if send_counter == 50: # to avoid be banned
+                break
 
     elif input_order == str(3): # add friends and like the posts
         add_friends_init()
@@ -224,5 +230,28 @@ while main_flag:
                 post_counter = 0
 
     elif input_order == str(4):
+        add_friends_init()
+        add_friends()
+        time.sleep(2)
+        click_first_video()
+        flag = True
+
+        while flag:
+            like = None
+            like = check_liked_or_not(like)
+            if like == True:
+                click_next_video()
+                time.sleep(1)
+                check_dead_or_not()
+                flag = check_end_or_not(flag)
+            else:
+                click_like_button()
+                time.sleep(0.5)
+                click_next_video()
+                time.sleep(1)
+                check_dead_or_not()
+                flag = check_end_or_not(flag)
+
+    elif input_order == str(5):
         main_flag = False
         print("Thank you! 888")
