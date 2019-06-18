@@ -6,7 +6,7 @@ import pyautogui
 import time
 import sys
 
-#789
+#000
 
 #要算相對距離
 hwnd = win32gui.FindWindow(None, '夜神模擬器')
